@@ -1,0 +1,9 @@
+# Host del paquete .NET: pieza de demostración, se incluye solo desde los overlays de dev y test.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - dotnet-producer-deployment.yaml
+images:
+  - name: image-registry.openshift-image-registry.svc:5000/kafka/dotnet-log-producer
+    newName: quay.io/rh-workshop/log-producer
+    newTag: latest

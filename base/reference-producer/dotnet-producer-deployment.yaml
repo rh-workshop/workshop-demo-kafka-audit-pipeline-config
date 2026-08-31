@@ -1,0 +1,73 @@
+# Productor .NET del pipeline de logs (host de demo del Paquete NuGet).
+# Sin 'namespace': lo fija el overlay (in-cluster -> kafka, external -> log-producers).
+# La imagen real (registry + tag inmutable) la fija el bloque 'images:' del overlay.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"   # reinicia el pod cuando rota un Secret montado (llave AES, certs)
+  name: dotnet-log-producer
+  labels:
+    app: dotnet-log-producer
+    app.kubernetes.io/part-of: kafka-logs-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dotnet-log-producer
+  template:
+    metadata:
+      labels:
+        app: dotnet-log-producer
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: dotnet-log-producer
+          image: image-registry.openshift-image-registry.svc:5000/kafka/dotnet-log-producer:latest
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }
+          env:
+            - name: BOOTSTRAP
+              value: "demo-kafka-kafka-bootstrap:9093"
+            - name: TOPIC
+              value: "tp.observability.logs.encrypted"
+            - name: CERT_DIR
+              value: "/opt/user"
+            - name: CA_FILE
+              value: "/opt/ca/ca.crt"
+            - name: KV_KEY_FILE
+              value: "/opt/kv/aes-key"
+          # El host .NET no expone HTTP: liveness por proceso (si el bucle muere, el proceso termina)
+          livenessProbe:
+            exec:
+              command: ["pgrep", "-f", "Produbanco.Logs.Host"]
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests: { cpu: "200m", memory: 256Mi }
+            limits: { cpu: "1", memory: 512Mi }
+          volumeMounts:
+            - name: user
+              mountPath: /opt/user
+              readOnly: true
+            - name: ca
+              mountPath: /opt/ca
+              readOnly: true
+            - name: kv
+              mountPath: /opt/kv
+              readOnly: true
+      volumes:
+        - name: user
+          secret:
+            secretName: audit-producer
+        - name: ca
+          secret:
+            secretName: demo-kafka-cluster-ca-cert
+        - name: kv
+          secret:
+            secretName: kv-demo

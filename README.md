@@ -12,19 +12,24 @@ sincroniza Argo CD; el código vive en
 | 3 `KafkaUser` | Una identidad por servicio, con permisos de mínimo privilegio |
 | `log-processor` | Descifra y enmascara los datos personales |
 | `log-sink` | Entrega al destino final; **no monta la llave de cifrado** |
-| `audit-producer` | Emisor de referencia — solo en dev y test |
+| `audit-producer` | Emisor de referencia en Java — solo en dev y test |
+| `dotnet-log-producer` | Host que demuestra el paquete .NET — solo en dev y test |
 
 ## Diferencias por ambiente
 
 | Ambiente | Servicios |
 |---|---|
-| dev, test | Los tres, incluido el emisor de referencia |
+| dev, test | Los cuatro: processor, sink y las dos piezas de demostración |
 | prod, contingencia | Solo processor y sink |
 
 En producción quien publica son los microservicios que integran el paquete .NET
 ([`workshop-demo-log-producer`](https://github.com/rh-workshop/workshop-demo-log-producer)).
-Dejar correr el emisor de referencia allí inyectaría eventos ficticios en el
-tópico de auditoría, así que el overlay lo retira.
+Las dos piezas de demostración —el emisor Java y el host .NET— inyectarían
+eventos ficticios en el tópico de auditoría, así que los overlays las retiran.
+
+El host .NET vive aquí y no en un repositorio de configuración propio porque lo
+que se entrega a los equipos es el **paquete**, no un servicio: el host solo
+demuestra la librería dentro de este mismo flujo.
 
 ## Requisitos previos
 
