@@ -9,15 +9,15 @@ kind: Kustomization
 namespace: kafka
 
 resources:
-  - ../../base
+- ../../base
 
 # Dos emisores independientes, uno por lenguaje: cada uno con su propia imagen. El
 # digest lo fija la promoción; arranca sin fijar porque estas imágenes aún no se han
 # construido (ver README).
 images:
-  - name: kafka-audit-demo-producer
-    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-demo-producer
-    newTag: latest
-  - name: kafka-audit-producer-dotnet
-    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-producer-dotnet
-    newTag: latest
+- name: kafka-audit-demo-producer
+  newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-demo-producer
+  newTag: latest
+- digest: sha256:56be48b7c1055f56535f17943339a00a1da766f8d094d6c369a28b2d01ea5dad
+  name: kafka-audit-producer-dotnet
+  newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-producer-dotnet
