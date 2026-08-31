@@ -6,7 +6,7 @@ metadata:
   name: log-sink
   labels:
     app: log-sink
-    app.kubernetes.io/part-of: kafka-logs-pipeline
+    app.kubernetes.io/part-of: kafka-audit-pipeline
 spec:
   replicas: 1
   selector:
@@ -22,7 +22,7 @@ spec:
         seccompProfile: { type: RuntimeDefault }
       containers:
         - name: log-sink
-          image: kafka-logs-pipeline
+          image: kafka-audit-pipeline
           securityContext:
             allowPrivilegeEscalation: false
             capabilities: { drop: ["ALL"] }

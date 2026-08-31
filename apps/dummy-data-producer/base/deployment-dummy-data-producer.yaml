@@ -6,7 +6,7 @@ metadata:
   name: dummy-data-producer
   labels:
     app: dummy-data-producer
-    app.kubernetes.io/part-of: kafka-logs-pipeline
+    app.kubernetes.io/part-of: kafka-audit-pipeline
 spec:
   replicas: 1
   selector:
@@ -22,7 +22,7 @@ spec:
         seccompProfile: { type: RuntimeDefault }
       containers:
         - name: dummy-data-producer
-          image: kafka-logs-demo-producer
+          image: kafka-audit-demo-producer
           securityContext:
             allowPrivilegeEscalation: false
             capabilities: { drop: ["ALL"] }

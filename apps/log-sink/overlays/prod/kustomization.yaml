@@ -9,8 +9,8 @@ resources:
 
 # Mismo binario que el processor, distinto ROLE: comparten imagen y por tanto digest.
 images:
-  - name: kafka-logs-pipeline
-    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-prod/kafka-logs-pipeline
+  - name: kafka-audit-pipeline
+    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-prod/kafka-audit-pipeline
     digest: sha256:a6c1507829a97b5df58c6ab92f3dfd3a38496f034db69e6430b39f7c9e38f3df
 
 patches:

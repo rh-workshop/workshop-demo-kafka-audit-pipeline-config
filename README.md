@@ -38,7 +38,7 @@ servicio entra en un ambiente creando su carpeta, y **la ausencia de carpeta es 
 lo mantiene fuera** — por eso el emisor de datos ficticios no puede desplegarse en
 producción aunque alguien lo intente: allí no hay overlay que lo describa.
 
-Además usan **imágenes distintas**: producción despliega `kafka-logs-pipeline`, que
+Además usan **imágenes distintas**: producción despliega `kafka-audit-pipeline`, que
 no contiene el código generador de datos ficticios —vive en otro artefacto—, así que
 el aislamiento no depende de estos manifiestos.
 
@@ -92,6 +92,6 @@ El flujo, en dos tramos:
    ambiente superior no se llega con un push directo. La firma se verifica siempre, y
    hacia producción se exige además que el commit venga etiquetado.
 
-El nombre lógico del bloque `images:` (`kafka-logs-pipeline`) debe coincidir con el
+El nombre lógico del bloque `images:` (`kafka-audit-pipeline`) debe coincidir con el
 parámetro `image-name` del PipelineRun; si divergen, la promoción no encuentra qué
 sustituir y el digest se pierde sin que falle nada.

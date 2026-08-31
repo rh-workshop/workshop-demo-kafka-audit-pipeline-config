@@ -43,7 +43,7 @@ spec:
       value: company-test
     # El processor y el sink comparten binario: se promociona una sola imagen.
     - name: image-name
-      value: kafka-logs-pipeline
+      value: kafka-audit-pipeline
     # El digest concreto que se promociona. Lo rellena quien abre el PR con el valor
     # que hoy corre en company-dev.
     - name: image-digest

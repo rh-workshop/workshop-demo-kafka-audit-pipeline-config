@@ -9,7 +9,7 @@ metadata:
   name: dummy-data-producer-dotnet
   labels:
     app: dummy-data-producer-dotnet
-    app.kubernetes.io/part-of: kafka-logs-pipeline
+    app.kubernetes.io/part-of: kafka-audit-pipeline
 spec:
   replicas: 1
   selector:
@@ -43,7 +43,7 @@ spec:
           # El host .NET no expone HTTP: liveness por proceso (si el bucle muere, el proceso termina)
           livenessProbe:
             exec:
-              command: ["pgrep", "-f", "Produbanco.Logs.Host"]
+              command: ["pgrep", "-f", "RedHat.Workshop.KafkaAudit.Host"]
             initialDelaySeconds: 10
             periodSeconds: 15
             failureThreshold: 3

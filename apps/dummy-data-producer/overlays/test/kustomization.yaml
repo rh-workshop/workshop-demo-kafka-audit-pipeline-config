@@ -15,8 +15,8 @@ resources:
 # digest lo fija la promoción; arranca sin fijar porque estas imágenes aún no se han
 # construido (ver README).
 images:
-  - name: kafka-logs-demo-producer
-    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-logs-demo-producer
+  - name: kafka-audit-demo-producer
+    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-audit-demo-producer
     newTag: latest
   - name: kafka-audit-producer-dotnet
     newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-audit-producer-dotnet
