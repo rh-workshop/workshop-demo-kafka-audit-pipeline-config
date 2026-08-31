@@ -1,61 +1,56 @@
+# Productor .NET del pipeline de logs (host de demo del Paquete NuGet).
+# Sin 'namespace': lo fija el overlay (in-cluster -> kafka, external -> log-producers).
+# La imagen real (registry + tag inmutable) la fija el bloque 'images:' del overlay.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
     reloader.stakater.com/auto: "true"   # reinicia el pod cuando rota un Secret montado (llave AES, certs)
-  name: audit-producer
-  namespace: kafka
+  name: dummy-data-producer-dotnet
   labels:
-    app: audit-producer
+    app: dummy-data-producer-dotnet
     app.kubernetes.io/part-of: kafka-logs-pipeline
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: audit-producer
+      app: dummy-data-producer-dotnet
   template:
     metadata:
       labels:
-        app: audit-producer
+        app: dummy-data-producer-dotnet
     spec:
       securityContext:
         runAsNonRoot: true
         seccompProfile: { type: RuntimeDefault }
       containers:
-        - name: audit-producer
-          image: image-registry.openshift-image-registry.svc:5000/kafka/kafka-logs-pipeline:latest
+        - name: dummy-data-producer-dotnet
+          image: image-registry.openshift-image-registry.svc:5000/kafka/dotnet-log-producer:latest
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             capabilities: { drop: ["ALL"] }
           env:
-            - name: ROLE
-              value: "producer"
             - name: BOOTSTRAP
               value: "demo-kafka-kafka-bootstrap:9093"
-            - name: USER_PASSWORD
-              valueFrom:
-                secretKeyRef: { name: audit-producer, key: user.password }
-            - name: CA_PASSWORD
-              valueFrom:
-                secretKeyRef: { name: demo-kafka-cluster-ca-cert, key: ca.password }
-          ports:
-            - name: http
-              containerPort: 8080
-          # SmallRye Health: /q/health/live refleja el bucle del rol; /q/health/ready la conexión a Kafka
+            - name: TOPIC
+              value: "tp.observability.logs.encrypted"
+            - name: CERT_DIR
+              value: "/opt/user"
+            - name: CA_FILE
+              value: "/opt/ca/ca.crt"
+            - name: KV_KEY_FILE
+              value: "/opt/kv/aes-key"
+          # El host .NET no expone HTTP: liveness por proceso (si el bucle muere, el proceso termina)
           livenessProbe:
-            httpGet: { path: /q/health/live, port: 8080 }
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            failureThreshold: 3
-          readinessProbe:
-            httpGet: { path: /q/health/ready, port: 8080 }
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            exec:
+              command: ["pgrep", "-f", "Produbanco.Logs.Host"]
+            initialDelaySeconds: 10
+            periodSeconds: 15
             failureThreshold: 3
           resources:
-            requests: { cpu: "200m", memory: 384Mi }
-            limits: { cpu: "1", memory: 768Mi }
+            requests: { cpu: "200m", memory: 256Mi }
+            limits: { cpu: "1", memory: 512Mi }
           volumeMounts:
             - name: user
               mountPath: /opt/user
@@ -69,7 +64,7 @@ spec:
       volumes:
         - name: user
           secret:
-            secretName: audit-producer
+            secretName: dummy-data-producer
         - name: ca
           secret:
             secretName: demo-kafka-cluster-ca-cert

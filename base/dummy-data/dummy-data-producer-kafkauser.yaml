@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
-  name: audit-producer
+  name: dummy-data-producer
   namespace: kafka
   labels:
     strimzi.io/cluster: demo-kafka

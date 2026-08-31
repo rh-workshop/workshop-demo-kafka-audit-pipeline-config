@@ -8,13 +8,11 @@ resources:
   - logs-masked-kafkatopic.yaml
   - logs-masked-dlq-kafkatopic.yaml
   # Una identidad por servicio, con permisos de mínimo privilegio.
-  - audit-producer-kafkauser.yaml
   - log-processor-kafkauser.yaml
   - log-sink-kafkauser.yaml
   # Los servicios: misma imagen, distinto rol.
   - processor-deployment.yaml
   - sink-deployment.yaml
-  - audit-producer-deployment.yaml
 
 # El registro y el tag se fijan aquí, no en cada Deployment: promocionar una versión
 # entre ambientes es una sola línea, y el tag es el commit que publicó el pipeline de CI.

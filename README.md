@@ -12,20 +12,25 @@ sincroniza Argo CD; el código vive en
 | 3 `KafkaUser` | Una identidad por servicio, con permisos de mínimo privilegio |
 | `log-processor` | Descifra y enmascara los datos personales |
 | `log-sink` | Entrega al destino final; **no monta la llave de cifrado** |
-| `audit-producer` | Emisor de referencia en Java — solo en dev y test |
-| `dotnet-log-producer` | Host que demuestra el paquete .NET — solo en dev y test |
+| `dummy-data-producer` | Emite eventos de prueba con **datos ficticios** (Java) — solo dev y test |
+| `dummy-data-producer-dotnet` | Igual, con el paquete .NET — solo dev y test |
 
 ## Diferencias por ambiente
 
 | Ambiente | Servicios |
 |---|---|
-| dev, test | Los cuatro: processor, sink y las dos piezas de demostración |
+| dev, test | Los cuatro: processor, sink y las dos piezas de datos ficticios |
 | prod, contingencia | Solo processor y sink |
+
+Las piezas de datos ficticios viven en `base/dummy-data/` y solo las incluyen los
+overlays de dev y test: los de producción simplemente no las referencian, sin
+necesidad de parches de borrado.
 
 En producción quien publica son los microservicios que integran el paquete .NET
 ([`workshop-demo-log-producer`](https://github.com/rh-workshop/workshop-demo-log-producer)).
-Las dos piezas de demostración —el emisor Java y el host .NET— inyectarían
-eventos ficticios en el tópico de auditoría, así que los overlays las retiran.
+Los emisores de prueba generan transacciones inventadas —correos, cédulas y
+tarjetas ficticias—; en producción se mezclarían con las reales en el tópico de
+auditoría y después nadie podría distinguir cuáles ocurrieron de verdad.
 
 El host .NET vive aquí y no en un repositorio de configuración propio porque lo
 que se entrega a los equipos es el **paquete**, no un servicio: el host solo

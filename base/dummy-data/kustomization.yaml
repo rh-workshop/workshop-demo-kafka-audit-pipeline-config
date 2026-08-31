@@ -1,0 +1,13 @@
+# Piezas que generan DATOS FICTICIOS para validar el flujo de extremo a extremo: un emisor Java y el
+# host que demuestra el paquete .NET. Solo las incluyen los overlays de dev y test — en producción
+# publicarían transacciones inventadas en el tópico de auditoría, mezcladas con las reales.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - dummy-data-producer-kafkauser.yaml
+  - dummy-data-producer-deployment.yaml
+  - dummy-data-producer-dotnet-deployment.yaml
+images:
+  - name: image-registry.openshift-image-registry.svc:5000/kafka/dotnet-log-producer
+    newName: quay.io/rh-workshop/log-producer
+    newTag: latest

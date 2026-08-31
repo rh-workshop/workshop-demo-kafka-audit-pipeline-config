@@ -1,8 +1,8 @@
-# En dev se despliegan también las dos piezas de demostración —el emisor Java de referencia y el
-# host del paquete .NET— para validar el flujo completo sin que los microservicios integren nada.
+# En dev se añaden las piezas de DATOS FICTICIOS (un emisor Java y el host del paquete .NET): permiten
+# validar el flujo completo sin que ningún microservicio tenga que integrar el paquete todavía.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: kafka
 resources:
   - ../../base
-  - ../../base/reference-producer
+  - ../../base/dummy-data
