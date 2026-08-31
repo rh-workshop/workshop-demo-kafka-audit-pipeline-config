@@ -1,0 +1,7 @@
+# El sink escribe al destino final: 1 réplica(s) en dev.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: no-importa-lo-sustituye-el-selector
+spec:
+  replicas: 1

@@ -22,8 +22,21 @@ sincroniza Argo CD; el código vive en
 | dev, test | Los cuatro: processor, sink y las dos piezas de datos ficticios |
 | prod, contingencia | Solo processor y sink |
 
-Las piezas de datos ficticios viven en `base/dummy-data/` y solo las incluyen los
-overlays de dev y test: los de producción simplemente no las referencian.
+Cada servicio es una carpeta bajo `apps/`, con su `base/` y un `overlays/<ambiente>`
+por cada ambiente donde existe:
+
+```
+apps/
+├── log-processor/        base + overlays dev, test, prod, contingencia
+├── log-sink/             base + overlays dev, test, prod, contingencia
+└── dummy-data-producer/  base + overlays dev, test        (no existe en prod)
+```
+
+Es la misma convención que `workshop-demo-app-config`, y no es cosmética: los
+ApplicationSets descubren servicios con el patrón `apps/*/overlays/<ambiente>`. Un
+servicio entra en un ambiente creando su carpeta, y **la ausencia de carpeta es lo que
+lo mantiene fuera** — por eso el emisor de datos ficticios no puede desplegarse en
+producción aunque alguien lo intente: allí no hay overlay que lo describa.
 
 Además usan **imágenes distintas**: producción despliega `kafka-logs-pipeline`, que
 no contiene el código generador de datos ficticios —vive en otro artefacto—, así que
@@ -43,10 +56,42 @@ demuestra la librería dentro de este mismo flujo.
 
 - El clúster Kafka de la plataforma, que despliega
   [`workshop-demo-platform-config`](https://github.com/rh-workshop/workshop-demo-platform-config).
-- Un Secret `kv-demo` con la llave de cifrado (clave `aes-key`), que montan el
-  processor y el emisor de referencia. El sink no lo necesita.
+- Un Secret `kv-demo` en el namespace `kafka` con la llave de cifrado (clave
+  `aes-key`), que montan el processor y el emisor de referencia. El sink no lo
+  necesita.
+
+  **No está en Git ni puede estarlo**: es la llave maestra de la que se derivan las
+  claves de cifrado. Se crea fuera del flujo GitOps, una vez por ambiente y con una
+  llave DISTINTA en cada uno:
+
+  ```
+  oc create secret generic kv-demo -n kafka \
+    --from-literal=aes-key="$(openssl rand -base64 32)"
+  ```
+
+  En un despliegue productivo esto lo sustituye un gestor de secretos (External
+  Secrets Operator contra un vault corporativo), que además permite rotar la llave: el
+  formato del payload cifrado va versionado precisamente para admitir esa rotación.
+  Los Deployments llevan `reloader.stakater.com/auto`, así que reinician solos cuando
+  el Secret cambia.
 
 ## Promocionar una versión
 
-El registro y el tag se fijan en el bloque `images:` del `base`: cambiar de
-versión es una línea, y el tag es el commit que publicó el pipeline de CI.
+La imagen se fija **por digest en el overlay de cada ambiente**, nunca por tag en el
+`base`. Un digest identifica un contenido exacto e inmutable: es lo que permite afirmar
+que lo que se validó en test es byte a byte lo que corre en producción, y lo que hace
+verificable la firma de cosign. Un tag como `latest` puede apuntar mañana a otra imagen.
+
+El flujo, en dos tramos:
+
+1. **CI → dev.** Al hacer push, el pipeline construye, firma y publica en la
+   organización `company-dev`, y escribe el digest en `overlays/dev`.
+2. **dev → test → prod.** Los `PipelineRun` de `.tekton/promote-*` copian la imagen
+   entre organizaciones de Quay sin reconstruirla, y actualizan el digest del overlay
+   destino. Se disparan **solo por Pull Request** contra las ramas `test` y `prod`: a un
+   ambiente superior no se llega con un push directo. La firma se verifica siempre, y
+   hacia producción se exige además que el commit venga etiquetado.
+
+El nombre lógico del bloque `images:` (`kafka-logs-pipeline`) debe coincidir con el
+parámetro `image-name` del PipelineRun; si divergen, la promoción no encuentra qué
+sustituir y el digest se pierde sin que falle nada.

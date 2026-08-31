@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Tópicos del pipeline y sus colas de descarte. Viven con el processor porque es
+  # quien los produce; el sink solo consume de logs-masked.
+  - kafkatopic-logs-encrypted.yaml
+  - kafkatopic-logs-encrypted-dlq.yaml
+  - kafkatopic-logs-masked.yaml
+  - kafkatopic-logs-masked-dlq.yaml
+  # Identidad propia, con permisos de mínimo privilegio.
+  - kafkauser-log-processor.yaml
+  - deployment-log-processor.yaml
+
+# El registro y el digest NO se fijan aquí sino en cada overlay: es el campo que el
+# pipeline de CI reescribe al promocionar una versión a un ambiente. El nombre lógico
+# debe coincidir con el param 'image-name' del PipelineRun o la promoción no encuentra
+# qué reemplazar y el digest se pierde en silencio.

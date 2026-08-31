@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Una identidad propia y distinta de la del pipeline: el emisor de datos ficticios
+  # solo puede escribir en logs-encrypted, nunca leer lo que el pipeline procesa.
+  - kafkauser-dummy-data-producer.yaml
+  - deployment-dummy-data-producer.yaml
+  - deployment-dummy-data-producer-dotnet.yaml
+
+# Este componente SOLO lo incluyen los overlays de dev y test. Prod y contingencia no
+# lo referencian: la exclusión es por composición, no por un parche que lo borre.

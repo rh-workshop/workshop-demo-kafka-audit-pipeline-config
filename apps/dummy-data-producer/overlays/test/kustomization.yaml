@@ -1,0 +1,23 @@
+# Overlay del entorno de test.
+#
+# Este servicio SOLO existe en dev y test. Prod y contingencia no tienen overlay: el
+# generador de transacciones inventadas no debe poder desplegarse contra datos reales,
+# y la ausencia de carpeta es lo que se lo impide (el ApplicationSet descubre carpetas).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: kafka
+
+resources:
+  - ../../base
+
+# Dos emisores independientes, uno por lenguaje: cada uno con su propia imagen. El
+# digest lo fija la promoción; arranca sin fijar porque estas imágenes aún no se han
+# construido (ver README).
+images:
+  - name: kafka-logs-demo-producer
+    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-logs-demo-producer
+    newTag: latest
+  - name: kafka-audit-producer-dotnet
+    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-audit-producer-dotnet
+    newTag: latest

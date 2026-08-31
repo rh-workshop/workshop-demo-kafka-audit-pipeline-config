@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"   # reinicia el pod cuando rota un Secret montado (llave AES, certs)
+  name: dummy-data-producer
+  labels:
+    app: dummy-data-producer
+    app.kubernetes.io/part-of: kafka-logs-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummy-data-producer
+  template:
+    metadata:
+      labels:
+        app: dummy-data-producer
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: dummy-data-producer
+          image: kafka-logs-demo-producer
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }
+          env:
+            - name: BOOTSTRAP
+              value: "demo-kafka-kafka-bootstrap:9093"
+            - name: USER_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: dummy-data-producer, key: user.password }
+            - name: CA_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: demo-kafka-cluster-ca-cert, key: ca.password }
+          ports:
+            - name: http
+              containerPort: 8080
+          # SmallRye Health: /q/health/live refleja el bucle del rol; /q/health/ready la conexión a Kafka
+          livenessProbe:
+            httpGet: { path: /q/health/live, port: 8080 }
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet: { path: /q/health/ready, port: 8080 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests: { cpu: "200m", memory: 384Mi }
+            limits: { cpu: "1", memory: 768Mi }
+          volumeMounts:
+            - name: user
+              mountPath: /opt/user
+              readOnly: true
+            - name: ca
+              mountPath: /opt/ca
+              readOnly: true
+            - name: kv
+              mountPath: /opt/kv
+              readOnly: true
+      volumes:
+        - name: user
+          secret:
+            secretName: dummy-data-producer
+        - name: ca
+          secret:
+            secretName: demo-kafka-cluster-ca-cert
+        - name: kv
+          secret:
+            secretName: kv-demo

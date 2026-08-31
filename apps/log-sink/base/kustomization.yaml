@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Identidad propia: solo lee de logs-masked y escribe en su DLQ.
+  - kafkauser-log-sink.yaml
+  - deployment-log-sink.yaml
+
+# El sink comparte imagen con el processor (mismo binario, distinto ROLE), así que su
+# digest lo fija el mismo pipeline de CI en el overlay de cada ambiente.

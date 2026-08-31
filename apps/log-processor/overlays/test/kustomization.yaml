@@ -1,0 +1,20 @@
+# Overlay del entorno de test.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: kafka
+
+resources:
+  - ../../base
+
+# La imagen se fija SIEMPRE por digest: es el campo que la promoción actualiza.
+# El digest arranca en el mismo que dev y avanza cuando se promociona una versión.
+images:
+  - name: kafka-logs-pipeline
+    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-logs-pipeline
+    digest: sha256:a6c1507829a97b5df58c6ab92f3dfd3a38496f034db69e6430b39f7c9e38f3df
+
+patches:
+  - path: replicas-patch.yaml
+    target:
+      kind: Deployment

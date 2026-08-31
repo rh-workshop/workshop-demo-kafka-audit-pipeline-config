@@ -1,0 +1,8 @@
+# En prod el procesador reparte la carga entre 3 réplicas; el consumo se equilibra
+# solo porque cada una toma particiones distintas del mismo grupo de consumo.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: no-importa-lo-sustituye-el-selector
+spec:
+  replicas: 3

@@ -1,0 +1,11 @@
+# Los tópicos siguen al cluster: en dev hay un solo broker, así que no hay dónde
+# colocar tres réplicas y el tópico se quedaría sin crear. El parche va por selector
+# de kind, no por nombre: un tópico nuevo hereda la corrección sin tocar este fichero.
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: no-importa-lo-sustituye-el-selector
+spec:
+  replicas: 1
+  config:
+    min.insync.replicas: 1

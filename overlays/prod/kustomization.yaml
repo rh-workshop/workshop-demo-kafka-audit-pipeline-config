@@ -1,8 +1,0 @@
-# Sin las piezas de datos ficticios: en prod quien publica son los microservicios que integran el
-# paquete .NET. Un emisor de prueba aquí mezclaría transacciones inventadas con las reales en el
-# tópico de auditoría, y después nadie podría distinguir cuáles ocurrieron de verdad.
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: kafka
-resources:
-  - ../../base
