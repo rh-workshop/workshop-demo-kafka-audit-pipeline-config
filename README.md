@@ -1,8 +1,8 @@
-# workshop-demo-log-pipeline-config
+# workshop-demo-kafka-audit-pipeline-config
 
 Configuración de despliegue del pipeline de logs de auditoría. Es lo que
 sincroniza Argo CD; el código vive en
-[`workshop-demo-log-pipeline`](https://github.com/rh-workshop/workshop-demo-log-pipeline).
+[`workshop-demo-kafka-audit-pipeline`](https://github.com/rh-workshop/workshop-demo-kafka-audit-pipeline).
 
 ## Qué se despliega
 
@@ -27,7 +27,7 @@ overlays de dev y test: los de producción simplemente no las referencian, sin
 necesidad de parches de borrado.
 
 En producción quien publica son los microservicios que integran el paquete .NET
-([`workshop-demo-log-producer`](https://github.com/rh-workshop/workshop-demo-log-producer)).
+([`workshop-demo-kafka-audit-producer`](https://github.com/rh-workshop/workshop-demo-kafka-audit-producer)).
 Los emisores de prueba generan transacciones inventadas —correos, cédulas y
 tarjetas ficticias—; en producción se mezclarían con las reales en el tópico de
 auditoría y después nadie podría distinguir cuáles ocurrieron de verdad.
