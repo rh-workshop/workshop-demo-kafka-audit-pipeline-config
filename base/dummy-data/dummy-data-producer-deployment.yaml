@@ -30,7 +30,7 @@ spec:
             capabilities: { drop: ["ALL"] }
           env:
             - name: ROLE
-              value: "producer"
+              value: "dummy_data"
             - name: BOOTSTRAP
               value: "demo-kafka-kafka-bootstrap:9093"
             - name: USER_PASSWORD
