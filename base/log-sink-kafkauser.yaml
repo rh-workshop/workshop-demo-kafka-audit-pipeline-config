@@ -1,0 +1,24 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: log-sink
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: demo-kafka
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      - resource: { type: topic, name: tp.observability.logs.masked, patternType: literal }
+        operations: [Describe, Read]
+      - resource: { type: topic, name: tp.observability.logs.masked.dlq, patternType: literal }
+        operations: [Describe, Write]
+      - resource: { type: group, name: log-sink-group, patternType: literal }
+        operations: [Read]
+  quotas:
+    producerByteRate: 2097152
+    consumerByteRate: 5242880
+    requestPercentage: 30
+    controllerMutationRate: 5

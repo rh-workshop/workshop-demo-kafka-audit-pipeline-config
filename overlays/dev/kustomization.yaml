@@ -1,0 +1,7 @@
+# En dev se despliega también el emisor de referencia: permite validar el flujo completo
+# sin depender de que los microservicios ya integren el paquete .NET.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kafka
+resources:
+  - ../../base

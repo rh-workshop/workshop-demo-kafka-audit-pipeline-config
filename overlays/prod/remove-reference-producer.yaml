@@ -1,0 +1,6 @@
+# Kustomize no borra recursos: se anula con la directiva de borrado del merge estratégico.
+$patch: delete
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-producer

@@ -1,0 +1,12 @@
+# Sin el emisor de referencia: en prod quien publica son los microservicios con el paquete .NET.
+# Dejarlo correr aquí inyectaría eventos ficticios en el tópico de auditoría.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kafka
+resources:
+  - ../../base
+patches:
+  - path: remove-reference-producer.yaml
+    target:
+      kind: Deployment
+      name: audit-producer
