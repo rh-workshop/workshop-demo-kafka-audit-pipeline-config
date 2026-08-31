@@ -23,8 +23,11 @@ sincroniza Argo CD; el código vive en
 | prod, contingencia | Solo processor y sink |
 
 Las piezas de datos ficticios viven en `base/dummy-data/` y solo las incluyen los
-overlays de dev y test: los de producción simplemente no las referencian, sin
-necesidad de parches de borrado.
+overlays de dev y test: los de producción simplemente no las referencian.
+
+Además usan **imágenes distintas**: producción despliega `kafka-logs-pipeline`, que
+no contiene el código generador de datos ficticios —vive en otro artefacto—, así que
+el aislamiento no depende de estos manifiestos.
 
 En producción quien publica son los microservicios que integran el paquete .NET
 ([`workshop-demo-kafka-audit-producer`](https://github.com/rh-workshop/workshop-demo-kafka-audit-producer)).

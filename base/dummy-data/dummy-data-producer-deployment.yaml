@@ -23,14 +23,12 @@ spec:
         seccompProfile: { type: RuntimeDefault }
       containers:
         - name: dummy-data-producer
-          image: image-registry.openshift-image-registry.svc:5000/kafka/kafka-logs-pipeline:latest
+          image: image-registry.openshift-image-registry.svc:5000/kafka/kafka-logs-demo-producer:latest
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             capabilities: { drop: ["ALL"] }
           env:
-            - name: ROLE
-              value: "dummy_data"
             - name: BOOTSTRAP
               value: "demo-kafka-kafka-bootstrap:9093"
             - name: USER_PASSWORD

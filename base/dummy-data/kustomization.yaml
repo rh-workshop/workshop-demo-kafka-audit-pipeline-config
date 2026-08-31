@@ -8,6 +8,10 @@ resources:
   - dummy-data-producer-deployment.yaml
   - dummy-data-producer-dotnet-deployment.yaml
 images:
+  # El generador Java tiene su PROPIA imagen: su código no viaja en la de producción.
+  - name: image-registry.openshift-image-registry.svc:5000/kafka/kafka-logs-demo-producer
+    newName: quay.io/rh-workshop/kafka-logs-demo-producer
+    newTag: latest
   - name: image-registry.openshift-image-registry.svc:5000/kafka/dotnet-log-producer
-    newName: quay.io/rh-workshop/log-producer
+    newName: quay.io/rh-workshop/kafka-audit-producer-dotnet
     newTag: latest

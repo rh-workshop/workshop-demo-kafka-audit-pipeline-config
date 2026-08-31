@@ -18,5 +18,5 @@ resources:
 # entre ambientes es una sola línea, y el tag es el commit que publicó el pipeline de CI.
 images:
   - name: image-registry.openshift-image-registry.svc:5000/kafka/kafka-logs-pipeline
-    newName: quay.io/rh-workshop/log-pipeline
+    newName: quay.io/rh-workshop/kafka-logs-pipeline
     newTag: latest
