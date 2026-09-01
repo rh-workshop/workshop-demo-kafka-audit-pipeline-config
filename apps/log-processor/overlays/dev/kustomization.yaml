@@ -5,17 +5,17 @@ kind: Kustomization
 namespace: kafka
 
 resources:
-  - ../../base
+- ../../base
 
 # La imagen se resuelve contra el registro corporativo (Quay) y se fija SIEMPRE por
 # digest: es el campo que el pipeline de CI actualiza al promocionar. El 'name' es el
 # nombre lógico que llevan los Deployments, no una URL.
 images:
-  - name: kafka-audit-pipeline
-    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-pipeline
-    digest: sha256:a6c1507829a97b5df58c6ab92f3dfd3a38496f034db69e6430b39f7c9e38f3df
+- digest: sha256:14e858534f5fcef0f09d7d06d80df658591d10375b5a6edcde0f6d5ecc6f2b26
+  name: kafka-audit-pipeline
+  newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-pipeline
 
 patches:
-  - path: single-replica-topics-patch.yaml
-    target:
-      kind: KafkaTopic
+- path: single-replica-topics-patch.yaml
+  target:
+    kind: KafkaTopic
