@@ -15,7 +15,7 @@ resources:
 # digest lo fija la promoción; arranca sin fijar porque estas imágenes aún no se han
 # construido (ver README).
 images:
-- digest: sha256:4501c92ebac927230f0f3fad58dcc79002b2ec3afb8ef756f198d0f73356ea9c
+- digest: sha256:0e51c219319f4ca81adce392755f8a12f1b7768507605dae5a4e52d6a9b04bbe
   name: kafka-audit-demo-producer
   newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-demo-producer
 - digest: sha256:56be48b7c1055f56535f17943339a00a1da766f8d094d6c369a28b2d01ea5dad
