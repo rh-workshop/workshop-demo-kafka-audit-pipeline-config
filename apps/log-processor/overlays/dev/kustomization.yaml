@@ -16,6 +16,9 @@ images:
   newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-dev/kafka-audit-pipeline
 
 patches:
-- path: single-replica-topics-patch.yaml
-  target:
-    kind: KafkaTopic
+  - path: kv-demo-externalsecret-patch.yaml
+    target:
+      kind: ExternalSecret
+  - path: single-replica-topics-patch.yaml
+    target:
+      kind: KafkaTopic

@@ -15,6 +15,9 @@ images:
     digest: sha256:a6c1507829a97b5df58c6ab92f3dfd3a38496f034db69e6430b39f7c9e38f3df
 
 patches:
+  - path: kv-demo-externalsecret-patch.yaml
+    target:
+      kind: ExternalSecret
   - path: replicas-patch.yaml
     target:
       kind: Deployment
