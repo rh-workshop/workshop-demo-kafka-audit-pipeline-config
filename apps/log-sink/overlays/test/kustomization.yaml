@@ -5,15 +5,15 @@ kind: Kustomization
 namespace: kafka
 
 resources:
-  - ../../base
+- ../../base
 
 # Mismo binario que el processor, distinto ROLE: comparten imagen y por tanto digest.
 images:
-  - name: kafka-audit-pipeline
-    newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-audit-pipeline
-    digest: sha256:a6c1507829a97b5df58c6ab92f3dfd3a38496f034db69e6430b39f7c9e38f3df
+- digest: sha256:14e858534f5fcef0f09d7d06d80df658591d10375b5a6edcde0f6d5ecc6f2b26
+  name: kafka-audit-pipeline
+  newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-audit-pipeline
 
 patches:
-  - path: replicas-patch.yaml
-    target:
-      kind: Deployment
+- path: replicas-patch.yaml
+  target:
+    kind: Deployment
