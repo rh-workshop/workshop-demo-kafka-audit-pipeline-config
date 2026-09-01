@@ -47,7 +47,19 @@ spec:
     # El digest concreto que se promociona. Lo rellena quien abre el PR con el valor
     # que hoy corre en company-test.
     - name: image-digest
-      value: sha256:a6c1507829a97b5df58c6ab92f3dfd3a38496f034db69e6430b39f7c9e38f3df
+      value: sha256:14e858534f5fcef0f09d7d06d80df658591d10375b5a6edcde0f6d5ecc6f2b26
+    # El repo de configuracion de ESTE servicio, no el de la app de ejemplo.
+    - name: config-repo
+      value: https://github.com/rh-workshop/workshop-demo-kafka-audit-pipeline-config.git
+    - name: app-repo
+      value: https://github.com/rh-workshop/workshop-demo-kafka-audit-pipeline
+    # Nombre logico de la imagen en el kustomization: si no coincide, la promocion no
+    # encuentra que sustituir y el digest se pierde sin que falle nada.
+    - name: kustomize-image-name
+      value: kafka-audit-pipeline
+    # Tag inmutable con el que la imagen viaja a la organizacion destino.
+    - name: image-tag
+      value: git-59bb008
     - name: target-overlay-path
       value: apps/log-processor/overlays/prod
     # Firma SIEMPRE verificada: si la imagen no esta firmada por la llave de la
