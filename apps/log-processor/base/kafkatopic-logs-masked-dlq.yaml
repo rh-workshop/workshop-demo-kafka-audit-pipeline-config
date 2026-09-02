@@ -11,6 +11,11 @@ spec:
     retention.ms: 259200000      # 72 h -- retención mayor para triage (best practice)
     max.message.bytes: 2500000
     segment.bytes: 268435456
+    # Kafka solo borra segmentos CERRADOS. Sin segment.ms el segmento activo rueda
+    # por segment.bytes (256 MiB) o, en su defecto, por el default de 7 DIAS: a
+    # ritmo bajo el dato sobrevive una semana y la retencion declarada arriba no se
+    # cumple. Con 1 h el borrado se aplica con esa granularidad.
+    segment.ms: 3600000
     cleanup.policy: delete
     min.insync.replicas: 2
     compression.type: producer

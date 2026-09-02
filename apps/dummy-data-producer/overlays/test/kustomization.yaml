@@ -11,9 +11,8 @@ namespace: kafka
 resources:
   - ../../base
 
-# Dos emisores independientes, uno por lenguaje: cada uno con su propia imagen. El
-# digest lo fija la promoción; arranca sin fijar porque estas imágenes aún no se han
-# construido (ver README).
+# Dos emisores independientes, uno por lenguaje: cada uno con su propia imagen,
+# fijada por digest. El digest lo actualiza la promocion en cada release.
 images:
   - name: kafka-audit-demo-producer
     newName: company-quay-quay-quay-enterprise.apps.ocp.hq2ss.sandbox3270.opentlc.com/company-test/kafka-audit-demo-producer

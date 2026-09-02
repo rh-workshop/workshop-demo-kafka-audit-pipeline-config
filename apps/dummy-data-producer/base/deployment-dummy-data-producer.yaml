@@ -27,6 +27,13 @@ spec:
             allowPrivilegeEscalation: false
             capabilities: { drop: ["ALL"] }
           env:
+            # El script run-java.sh de la imagen UBI usa MaxRAMPercentage=80 si no se
+            # fija: 614 MiB de heap sobre un limite de 768 MiB dejan ~150 MiB para
+            # metaspace, hilos y los buffers NATIVOS de kafka-clients (2,5 MB por
+            # mensaje) -- el contenedor muere por OOMKill sin lanzar OutOfMemoryError.
+            # Con 60 el heap queda en ~460 MiB y el resto de la memoria es holgura.
+            - name: JAVA_MAX_MEM_RATIO
+              value: "60"
             - name: BOOTSTRAP
               value: "demo-kafka-kafka-bootstrap:9093"
             - name: USER_PASSWORD

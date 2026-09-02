@@ -40,13 +40,10 @@ spec:
               value: "/opt/ca/ca.crt"
             - name: KV_KEY_FILE
               value: "/opt/kv/aes-key"
-          # El host .NET no expone HTTP: liveness por proceso (si el bucle muere, el proceso termina)
-          livenessProbe:
-            exec:
-              command: ["pgrep", "-f", "RedHat.Workshop.KafkaAudit.Host"]
-            initialDelaySeconds: 10
-            periodSeconds: 15
-            failureThreshold: 3
+          # Sin livenessProbe: el host .NET no expone HTTP y una probe por proceso no
+          # aporta nada -- si el bucle muere, el proceso termina y el contenedor
+          # reinicia solo. La imagen no trae procps-ng, asi que `pgrep` tampoco es
+          # una opcion: una exec probe cuyo binario falta cuenta como fallo.
           resources:
             requests: { cpu: "200m", memory: 256Mi }
             limits: { cpu: "1", memory: 512Mi }

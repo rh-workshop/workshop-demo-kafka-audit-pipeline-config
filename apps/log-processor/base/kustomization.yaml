@@ -11,7 +11,7 @@ resources:
   # Identidad propia, con permisos de mínimo privilegio.
   - kafkauser-log-processor.yaml
   # La llave de cifrado, traida del almacen corporativo en vez de creada a mano.
-  - kv-demo-externalsecret.yaml
+  - externalsecret-kv-demo.yaml
   - deployment-log-processor.yaml
 
 # El registro y el digest NO se fijan aquí sino en cada overlay: es el campo que el
